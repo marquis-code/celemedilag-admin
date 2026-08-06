@@ -11,11 +11,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        royalBlue: '#002366',
-        skyBlue: '#00BFFF',
-        gold: '#FFD700',
+        royalBlue: '#167a9e',
+        skyBlue: '#2db8e6',
+        gold: '#eb7d16',
       },
       fontFamily: {
+        sans: ['Satoshi', 'sans-serif'],
         display: ['Clash Display Variable', 'sans-serif'],
         body: ['Satoshi', 'sans-serif'],
       },

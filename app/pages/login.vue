@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-[#F8FAFC] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+  <div class="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
     <!-- Background Decor -->
     <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
       <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-100 rounded-full blur-3xl opacity-50 mix-blend-multiply"></div>
@@ -43,13 +43,17 @@
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Lock class="h-5 w-5 text-gray-400" />
               </div>
-              <input id="password" name="password" type="password" autocomplete="current-password" required v-model="password"
-                class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-skyBlue/20 focus:border-skyBlue sm:text-sm transition-all"
+              <input id="password" name="password" :type="showPassword ? 'text' : 'password'" autocomplete="current-password" required v-model="password"
+                class="appearance-none block w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-skyBlue/20 focus:border-skyBlue sm:text-sm transition-all"
                 placeholder="••••••••">
+              <button type="button" @click="showPassword = !showPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none">
+                <Eye v-if="!showPassword" class="h-5 w-5" />
+                <EyeOff v-else class="h-5 w-5" />
+              </button>
             </div>
           </div>
 
-          <div class="flex items-center justify-between mt-4">
+          <!-- <div class="flex items-center justify-between mt-4">
             <div class="flex items-center">
               <input id="remember-me" name="remember-me" type="checkbox"
                 class="h-4 w-4 text-royalBlue focus:ring-royalBlue border-gray-300 rounded">
@@ -63,12 +67,15 @@
                 Forgot password?
               </a>
             </div>
-          </div>
+          </div> -->
 
           <div>
             <button type="submit"
-              class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-royalBlue hover:bg-skyBlue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-royalBlue transition-colors">
-              Sign in
+              :disabled="isLoading"
+              class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-royalBlue hover:bg-skyBlue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-royalBlue transition-colors disabled:opacity-75 disabled:cursor-not-allowed">
+              <Loader2 v-if="isLoading" class="w-5 h-5 animate-spin mr-2" />
+              <span v-if="!isLoading">Sign in</span>
+              <span v-else>Signing in...</span>
             </button>
           </div>
         </form>
@@ -83,16 +90,37 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { Church, Mail, Lock } from 'lucide-vue-next'
+import { Church, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-vue-next'
 
 const router = useRouter()
+const { showToast } = useToast()
+
 const email = ref('')
 const password = ref('')
+const showPassword = ref(false)
+const isLoading = ref(false)
 
-const handleLogin = () => {
-  // For now, bypass actual auth
-  console.log('Login attempted with', email.value)
-  router.push('/admin')
+const handleLogin = async () => {
+  if (!email.value || !password.value) return;
+  
+  isLoading.value = true;
+  
+  try {
+    // Simulate API network delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    // For now, bypass actual auth
+    if (email.value === 'admin@celemedilag.org' && password.value === 'admin123') {
+      showToast('Successfully logged in!', 'success');
+      router.push('/admin');
+    } else {
+      showToast('Invalid email or password. Please try again.', 'error');
+    }
+  } catch (error) {
+    showToast('An error occurred during sign in.', 'error');
+  } finally {
+    isLoading.value = false;
+  }
 }
 
 // Don't use the admin layout for the login page

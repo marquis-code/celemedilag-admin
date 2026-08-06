@@ -9,8 +9,12 @@
         {{ saveStatus }}
       </div>
     </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    
+    <div v-if="pending" class="p-12 flex justify-center">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-royalBlue"></div>
+    </div>
+    
+    <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <!-- Hero Section -->
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
@@ -31,7 +35,6 @@
           </div>
         </div>
       </div>
-
       <!-- Vision & Mission -->
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
@@ -66,19 +69,23 @@ const settings = ref({
 
 const saveStatus = ref('');
 let saveTimeout: ReturnType<typeof setTimeout>;
+const pending = ref(true);
+
+const { useSettingsApi, updateSetting } = useApi();
 
 // Fetch initial settings
 onMounted(async () => {
   try {
-    const res = await fetch('http://127.0.0.1:3001/api/settings');
-    const data = await res.json();
-    data.forEach((item: any) => {
-      if (settings.value[item.key as keyof typeof settings.value] !== undefined) {
-        settings.value[item.key as keyof typeof settings.value] = item.value;
+    const fetchedSettings = await useSettingsApi();
+    Object.keys(fetchedSettings).forEach(key => {
+      if (settings.value[key as keyof typeof settings.value] !== undefined) {
+        settings.value[key as keyof typeof settings.value] = fetchedSettings[key];
       }
     });
   } catch (err) {
     console.error('Failed to fetch settings:', err);
+  } finally {
+    pending.value = false;
   }
 });
 
@@ -86,20 +93,17 @@ onMounted(async () => {
 watch(settings, (newVal) => {
   saveStatus.value = 'Saving...';
   clearTimeout(saveTimeout);
-  
   saveTimeout = setTimeout(async () => {
     try {
       // Save all settings iteratively (aggressive CMS)
       const promises = Object.keys(newVal).map((key) => {
-        return fetch(`http://127.0.0.1:3001/api/settings/${key}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ value: newVal[key as keyof typeof newVal] })
-        });
+        return updateSetting(key, newVal[key as keyof typeof newVal]);
       });
       await Promise.all(promises);
       saveStatus.value = 'Saved automatically';
-      setTimeout(() => { if (saveStatus.value === 'Saved automatically') saveStatus.value = '' }, 2000);
+      setTimeout(() => {
+        if (saveStatus.value === 'Saved automatically') saveStatus.value = '';
+      }, 2000);
     } catch (err) {
       saveStatus.value = 'Save failed';
       console.error(err);
