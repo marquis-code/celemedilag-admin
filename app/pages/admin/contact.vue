@@ -45,6 +45,14 @@
             <label class="block text-sm font-medium text-gray-700 mb-1">Twitter (X) URL</label>
             <input v-model="settings.twitter" type="url" placeholder="https://twitter.com/..." class="w-full p-2 border border-gray-300 rounded-md focus:ring-royalBlue focus:border-royalBlue">
           </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">TikTok URL</label>
+            <input v-model="settings.tiktok" type="url" placeholder="https://tiktok.com/..." class="w-full p-2 border border-gray-300 rounded-md focus:ring-royalBlue focus:border-royalBlue">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">YouTube URL</label>
+            <input v-model="settings.youtube" type="url" placeholder="https://youtube.com/..." class="w-full p-2 border border-gray-300 rounded-md focus:ring-royalBlue focus:border-royalBlue">
+          </div>
         </div>
 
         <div class="pt-6 flex justify-end">
@@ -68,7 +76,9 @@ const settings = ref({
   phone: '+234 800 000 0000',
   meetingTimes: 'Sundays 9AM, Wednesdays 6PM',
   instagram: '',
-  twitter: ''
+  twitter: '',
+  tiktok: '',
+  youtube: ''
 });
 
 const saveStatus = ref('');
