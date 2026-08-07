@@ -42,7 +42,7 @@
                 {{ new Date(msg.createdAt).toLocaleString() }}
               </td>
               <td class="p-4 align-top">
-                <div class="font-semibold text-gray-900">{{ msg.fullName }}</div>
+                <div class="font-semibold text-gray-900">{{ msg.name }}</div>
                 <div class="text-sm text-gray-500 hover:text-royalBlue">
                   <a :href="`mailto:${msg.email}`">{{ msg.email }}</a>
                 </div>
@@ -78,7 +78,7 @@ const error = ref(false);
 
 onMounted(async () => {
   try {
-    const res = await apiClient.get('/contact');
+    const res = await apiClient.get('/contacts');
     contacts.value = res.data.data || res.data;
   } catch (err) {
     console.error('Error fetching contacts:', err);
