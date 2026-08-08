@@ -51,6 +51,7 @@ const emit = defineEmits(['update:modelValue']);
 const isUploading = ref(false);
 
 const { apiClient } = useApi();
+const { showToast } = useToast();
 
 async function uploadFile(event: Event) {
   const target = event.target as HTMLInputElement;
@@ -77,7 +78,7 @@ async function uploadFile(event: Event) {
     }
   } catch (err) {
     console.error('Error uploading document:', err);
-    alert('Failed to upload document. Please check your connection and try again.');
+    showToast('Failed to upload document. Please check your connection and try again.', 'error');
   } finally {
     isUploading.value = false;
     target.value = ''; // Reset input

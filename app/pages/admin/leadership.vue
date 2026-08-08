@@ -169,6 +169,7 @@ import ConfirmModal from '~/components/ConfirmModal.vue'
 
 const { useLeadershipApi } = useApi()
 const { data: executivesRaw, pending, error, fetchAll, create, update, remove } = useLeadershipApi()
+const { showToast } = useToast()
 
 onMounted(async () => {
   await fetchAll()
@@ -248,7 +249,7 @@ const saveExecutive = async () => {
     closeModal()
   } catch (err) {
     console.error('Error saving executive', err)
-    alert('Failed to save executive')
+    showToast('Failed to save executive', 'error')
   } finally {
     saving.value = false
   }
@@ -273,7 +274,7 @@ const executeDelete = async () => {
     isDeleteModalOpen.value = false
   } catch (err) {
     console.error('Error deleting executive', err)
-    alert('Failed to delete executive')
+    showToast('Failed to delete executive', 'error')
   } finally {
     deleting.value = false
   }

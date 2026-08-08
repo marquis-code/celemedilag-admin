@@ -136,6 +136,7 @@ import ConfirmModal from '~/components/ConfirmModal.vue'
 
 const { useDepartmentsApi } = useApi()
 const { data: departments, pending, error, fetchAll, create, update, remove } = useDepartmentsApi()
+const { showToast } = useToast()
 
 onMounted(async () => {
   await fetchAll()
@@ -217,7 +218,7 @@ const saveDepartment = async () => {
     closeModal()
   } catch (error) {
     console.error('Failed to save department:', error)
-    alert('Failed to save department. Please try again.')
+    showToast('Failed to save department. Please try again.', 'error')
   } finally {
     isSaving.value = false
   }
@@ -238,7 +239,7 @@ const deleteDepartment = async () => {
     deptToDelete.value = null
   } catch (error) {
     console.error('Failed to delete department:', error)
-    alert('Failed to delete department. Please try again.')
+    showToast('Failed to delete department. Please try again.', 'error')
   } finally {
     isDeleting.value = false
   }

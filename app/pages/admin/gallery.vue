@@ -153,6 +153,7 @@ import ImageUpload from '~/components/ImageUpload.vue'
 
 const { useGalleryApi } = useApi()
 const { data: albums, pending, error, fetchAll, create, update, remove } = useGalleryApi()
+const { showToast } = useToast()
 
 onMounted(async () => {
   await fetchAll()
@@ -243,7 +244,7 @@ const saveAlbum = async () => {
     closeModal()
   } catch (err) {
     console.error('Failed to save album', err)
-    alert('Failed to save album. Please try again.')
+    showToast('Failed to save album. Please try again.', 'error')
   } finally {
     saving.value = false
   }
@@ -269,7 +270,7 @@ const executeDelete = async () => {
     itemToDelete.value = ''
   } catch (err) {
     console.error('Failed to delete album', err)
-    alert('Failed to delete album. Please try again.')
+    showToast('Failed to delete album. Please try again.', 'error')
   } finally {
     deleting.value = false
   }

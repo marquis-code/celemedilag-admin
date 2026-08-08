@@ -208,6 +208,7 @@ import ConfirmModal from '~/components/ConfirmModal.vue'
 
 const { useEventsApi } = useApi()
 const { data: events, pending, error, fetchAll, create, update, remove } = useEventsApi()
+const { showToast } = useToast()
 
 onMounted(async () => {
   await fetchAll()
@@ -302,7 +303,7 @@ const saveEvent = async () => {
     closeModal()
   } catch (e) {
     console.error('Error saving event', e)
-    alert('Failed to save event')
+    showToast('Failed to save event', 'error')
   } finally {
     saving.value = false
   }
@@ -326,7 +327,7 @@ const executeDelete = async () => {
     isDeleteModalOpen.value = false
   } catch (e) {
     console.error('Error deleting event', e)
-    alert('Failed to delete event')
+    showToast('Failed to delete event', 'error')
   } finally {
     deleting.value = false
   }

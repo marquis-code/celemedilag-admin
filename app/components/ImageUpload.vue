@@ -67,6 +67,7 @@ const isUploading = ref(false);
 const isGalleryModalOpen = ref(false);
 
 const { apiClient } = useApi();
+const { showToast } = useToast();
 
 const handleGallerySelection = (url: string) => {
   emit('update:modelValue', url);
@@ -98,7 +99,7 @@ async function uploadImage(event: Event) {
     }
   } catch (err) {
     console.error('Error uploading image:', err);
-    alert('Failed to upload image. Please check your connection and try again.');
+    showToast('Failed to upload image. Please check your connection and try again.', 'error');
   } finally {
     isUploading.value = false;
     target.value = ''; // Reset input

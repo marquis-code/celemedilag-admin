@@ -149,6 +149,7 @@ import ConfirmModal from '~/components/ConfirmModal.vue'
 
 const { useAlumniApi } = useApi()
 const { data: alumni, pending, error, fetchAll, create, update, remove } = useAlumniApi()
+const { showToast } = useToast()
 
 onMounted(async () => {
   await fetchAll()
@@ -229,7 +230,7 @@ const saveAlumnus = async () => {
     closeModal()
   } catch (error) {
     console.error('Failed to save alumnus:', error)
-    alert('Failed to save alumnus. Please try again.')
+    showToast('Failed to save alumnus. Please try again.', 'error')
   } finally {
     isSaving.value = false
   }
@@ -250,7 +251,7 @@ const deleteAlumnus = async () => {
     alumnusToDelete.value = null
   } catch (error) {
     console.error('Failed to delete alumnus:', error)
-    alert('Failed to delete alumnus. Please try again.')
+    showToast('Failed to delete alumnus. Please try again.', 'error')
   } finally {
     isDeleting.value = false
   }

@@ -186,6 +186,7 @@ import ConfirmModal from '~/components/ConfirmModal.vue'
 
 const { useNewsApi } = useApi()
 const { data: news, pending, error, fetchAll, create, update, remove } = useNewsApi()
+const { showToast } = useToast()
 
 onMounted(async () => {
   await fetchAll()
@@ -284,7 +285,7 @@ const saveNews = async () => {
     closeModal()
   } catch (e) {
     console.error('Error saving news', e)
-    alert('Failed to save news article')
+    showToast('Failed to save news article', 'error')
   } finally {
     saving.value = false
   }
@@ -308,7 +309,7 @@ const executeDelete = async () => {
     isDeleteModalOpen.value = false
   } catch (e) {
     console.error('Error deleting news', e)
-    alert('Failed to delete article')
+    showToast('Failed to delete article', 'error')
   } finally {
     deleting.value = false
   }
